@@ -6,8 +6,8 @@
 
 Este proyecto ha sido realizado por:
 * Carlos Sánchez Sánchez
-* [Nombre y Apellidos del Miembro 2]
-* [Nombre y Apellidos del Miembro 3]
+* Jose Antonio Díaz Parralejo
+* Álvaro Corvillo Moreno
 
 
 == 2. Clase de Ejecución ==
