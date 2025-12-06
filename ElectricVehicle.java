@@ -191,7 +191,7 @@ public class ElectricVehicle
      * if the vehicle cannot reach the final target directly.
      * Sets {@code rechargingLocation} to the chosen station's location.
      */
-    public void calculateRechargingPosition()
+    public void calculateRechargingPosition()   //Módulo más importante
     {
         ChargingStation bestStation = null;
         int minDistance = Integer.MAX_VALUE;
