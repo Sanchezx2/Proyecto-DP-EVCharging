@@ -197,31 +197,34 @@ public class ElectricVehicle
         int minDistance = Integer.MAX_VALUE;
         List<ChargingStation> allStations = company.getCityStations();
         
-        //Recorremos la lista estación por estación
+        // Recorremos la lista estación por estación
         for (ChargingStation station : allStations) {
             
-                if (station.getLocation().equals(this.location)) {
-                continue; // Salta a la siguiente estación del bucle
-            }
-            //Distancia desde MÍ a esta ESTACIÓN
-            int distToStation = this.location.distance(station.getLocation());
-            
-            //¿Tengo batería para llegar a esta estación?
-            if (this.enoughBattery(distToStation)) {
+            // comprobamos si la estación NO está en mi ubicación.
+            // Solo entramos al bloque si la estación es distinta a donde estoy.
+            if (!station.getLocation().equals(this.location)) {
                 
-                //SÍ. Ahora calculo la ruta completa del desvío
-                int distStationToFinalTarget = station.getLocation().distance(this.targetLocation);
-                int totalDetourDistance = distToStation + distStationToFinalTarget;
+                // Distancia desde MÍ a esta ESTACIÓN
+                int distToStation = this.location.distance(station.getLocation());
                 
-                //¿Es esta ruta mejor que la que ya tenía?
-                if (totalDetourDistance < minDistance) {
+                // ¿Tengo batería para llegar a esta estación?
+                if (this.enoughBattery(distToStation)) {
                     
-                    //Si es mejor, la guardo como la nueva ganadora
-                    minDistance = totalDetourDistance;
-                    bestStation = station;
+                    // SÍ. Ahora calculo la ruta completa del desvío
+                    int distStationToFinalTarget = station.getLocation().distance(this.targetLocation);
+                    int totalDetourDistance = distToStation + distStationToFinalTarget;
+                    
+                    // ¿Es esta ruta mejor que la que ya tenía?
+                    if (totalDetourDistance < minDistance) {
+                        
+                        // Si es mejor, la guardo como la nueva ganadora
+                        minDistance = totalDetourDistance;
+                        bestStation = station;
+                    }
                 }
             }
         }
+        
         if (bestStation != null) {
             // Encontramos una estación: guardamos su ubicación
             this.rechargingLocation = bestStation.getLocation();
@@ -320,9 +323,8 @@ public class ElectricVehicle
             System.out.println("(step: " + step + " - ElectricVehicle: " + this.plate + 
                                " recharges: " + kwsNeeded + "kwh at charger: " + 
                                charger.getId() + " with cost: " + cost + "€ ********)");
-        } else {
-            // No hay cargadores libres
-        } 
+            calculateRoute();
+        }
     } 
     
     /**
@@ -349,48 +351,47 @@ public class ElectricVehicle
       */
      public void act(int step)
      {
-        // Destino final
+        // 1. ¿Ya estaba en el destino FINAL al empezar el turno?
         if (this.location.equals(this.targetLocation)) {
-            // Sí. No hago nada, solo cuento el turno como inactivo.
-            this.incrementIdleCount();
-            return;
-        }
-        
-        // Estación de recarga
-        if (this.hasRechargingLocation() && this.location.equals(this.rechargingLocation)) {
-            // Sí. Recargo la batería.
-            this.recharge(step);
-            return;
-        }
-        
-        // "estar tirado" ultimo else de recharge()
-        if (!this.hasRechargingLocation() && !this.enoughBattery(this.distanceToTheTargetLocation())) {
-            // Sí. No me puedo mover.
             this.incrementIdleCount();
             return;
         }
 
-        // Coche se mueve
-        
-        // Calcular destino
+        // 2. SEGURIDAD: ¿Estoy "tirado"? (Antes de moverme)
+        // Si NO voy a una estación Y NO tengo batería para el destino final...
+        if (!this.hasRechargingLocation() && !this.enoughBattery(this.distanceToTheTargetLocation())) {
+            this.incrementIdleCount(); 
+            return; // Me quedo quieto (esto arregla el EV0)
+        }
+
+        // 3. Preparar movimiento
         Location currentTarget;
         if (this.hasRechargingLocation()) {
             currentTarget = this.rechargingLocation;
         } else {
             currentTarget = this.targetLocation;
         }
+
+        // 4. MOVERSE
         Location nextStep = this.location.nextLocation(currentTarget);
         this.setLocation(nextStep);
-        
-        // Gasto batería
         this.reduceBatteryLevel();
         
-        // Destino final
-        if (this.location.equals(this.targetLocation)) {
+        // 5. Comprobar dónde he aterrizado (DESPUÉS de moverme)
+        
+        // Caso A: ¿Acabamos de llegar a la ESTACIÓN de recarga?
+        if (this.hasRechargingLocation() && this.location.equals(this.rechargingLocation)) {
+            // ¡Sí! Recargamos inmediatamente en este mismo turno.
+            this.recharge(step); 
+        }
+        
+        // Caso B: ¿Acabamos de llegar al DESTINO FINAL?
+        else if (this.location.equals(this.targetLocation)) {
+            // ¡Sí! Registramos la llegada.
             this.arrivingStep = step;
             System.out.println("(step: " + step + " - ElectricVehicle: " + this.plate +
                                " at target destination ********)");
-        }     
+        }
     }
      
     /**

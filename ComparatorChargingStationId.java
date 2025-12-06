@@ -18,7 +18,6 @@ public class ComparatorChargingStationId implements Comparator<ChargingStation>
      * station's ID is less than, equal to, or greater than the second.
      */
     public int compare(ChargingStation st1, ChargingStation st2){  
-        //TODO: Complete this code
-        return 0;   
+        return st1.getId().compareTo(st2.getId());   
     } 
 }

@@ -16,7 +16,7 @@ public class ChargingStation
     private Location location;
     
     /** * Lista de cargadores. 
-     * El PDF  exige que esta lista esté SIEMPRE ordenada
+     * Lista esté SIEMPRE ordenada
      * usando el comparador de 3 criterios.
      */
     private List<Charger> chargers;

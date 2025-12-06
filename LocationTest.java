@@ -48,12 +48,12 @@ public class LocationTest
     {
         Location p0 = new Location(0, 0);
         Location p1 = new Location(1, 5);
-        // p0 (0,0) y p1 (1,5) -> max(|1-0|, |5-0|) = max(1, 5) = 5 [cite: 99-100]
+        // p0 (0,0) y p1 (1,5) -> max(|1-0|, |5-0|) = max(1, 5) = 5
         assertEquals(5, p0.distance(p1));
             
         Location p2 = new Location(6, 6);
         Location p3 = new Location(5, 2);
-        // p2 (6,6) y p3 (5,2) -> max(|5-6|, |2-6|) = max(1, 4) = 4 [cite: 99-100]
+        // p2 (6,6) y p3 (5,2) -> max(|5-6|, |2-6|) = max(1, 4) = 4
         assertEquals(4, p2.distance(p3));
             
         // Test misma localización
@@ -100,24 +100,24 @@ public class LocationTest
     {
         // --- Pruebas de movimiento diagonal ---
         
-        // p0 (0,0) a p1 (1,5) -> siguiente es (1,1) [cite: 104-105]
+        // p0 (0,0) a p1 (1,5) -> siguiente es (1,1)
         Location p0 = new Location(0, 0);
         Location p1 = new Location(1, 5);
         assertEquals(new Location(1, 1), p0.nextLocation(p1));
             
-        // p2 (6,6) a p3 (5,2) -> siguiente es (5,5) [cite: 104-105]
+        // p2 (6,6) a p3 (5,2) -> siguiente es (5,5)
         Location p2 = new Location(6, 6);
         Location p3 = new Location(5, 2);
         assertEquals(new Location(5, 5), p2.nextLocation(p3));
 
-        // p5 (3,2) a p6 (6,0) -> siguiente es (4,1) [cite: 104-105]
+        // p5 (3,2) a p6 (6,0) -> siguiente es (4,1)
         Location p5 = new Location(3, 2);
         Location p6 = new Location(6, 0);
         assertEquals(new Location(4, 1), p5.nextLocation(p6));
             
         // --- Prueba de movimiento recto (Caso B) ---
         
-        // Estamos en (1,2) y vamos a (1,5) -> siguiente es (1,3) [cite: 107-109]
+        // Estamos en (1,2) y vamos a (1,5) -> siguiente es (1,3)
         Location pRectaBase = new Location(1, 2);
         Location pRectaDest = new Location(1, 5);
         assertEquals(new Location(1, 3), pRectaBase.nextLocation(pRectaDest));

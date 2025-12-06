@@ -157,3 +157,4 @@ public class Charger
         this.free = free;
     }
 }
+//falra equal y hash code
