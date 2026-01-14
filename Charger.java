@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 /**
  * Model a charger unit within a {@link ChargingStation}.
  * It tracks its charging capabilities, fee, and the electric vehicles it has recharged.
@@ -156,5 +157,18 @@ public class Charger
     public void setFree(boolean free) {
         this.free = free;
     }
+    
+    //Equals y hashCode implmentado
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Charger other = (Charger) obj;
+        return Objects.equals(id, other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
-//falra equal y hash code

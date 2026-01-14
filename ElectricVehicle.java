@@ -1,8 +1,10 @@
 import java.util.List;
+import java.util.Objects;
+
 /**
  * Model the common elements of an Electric Vehicle (EV) that operates 
  * within the simulation, moving towards a target and potentially recharging.
- * * @author David J. Barnes and Michael Kölling
+ * @author David J. Barnes and Michael Kölling
  * @author DP classes 
  * @version 2024.10.07
  */
@@ -32,7 +34,6 @@ public class ElectricVehicle
     
     private int chargesCount;   //Número total de recargas hechas
     
-
     private float chargesCost;  //Coste total de todas las recargas
     
     private int arrivingStep;   //Turno (step) en el que llegó a su destino final
@@ -406,6 +407,26 @@ public class ElectricVehicle
             this.batteryLevel = 0;
         }   
     }
+    
+    // --- MÉTODOS QUE FALTABAN PARA QUE COMPILE EL TEST ---
+
+    /**
+     * Get the current battery level.
+     * @return The current battery level in kwh.
+     */
+    public int getBatteryLevel() {
+        return this.batteryLevel;
+    }
+
+    /**
+     * Get the name of the vehicle.
+     * @return The name/model of the vehicle.
+     */
+    public String getName() {
+        return this.name;
+    }
+
+    // -----------------------------------------------------
 
     
     /**
@@ -457,5 +478,24 @@ public class ElectricVehicle
     public String getPlate()
     {
         return this.plate;
+    }
+    /**
+     * Compara si este vehículo es igual a otro objeto.
+     * Dos vehículos son iguales si tienen la misma matrícula.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        ElectricVehicle other = (ElectricVehicle) obj;
+        return Objects.equals(plate, other.plate);
+    }
+
+    /**
+     * Genera un código hash basado en la matrícula.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(plate);
     }
 }
