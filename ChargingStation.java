@@ -1,23 +1,19 @@
-import java.util.List;
-import java.util.Collections;
-import java.util.ArrayList;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * Models an Electric Vehicle Charging Station.
  * A charging station contains multiple {@link Charger} units.
  * @author DP classes 
- * @version 2024.10.07
+ * @version 2025
  */
-public class ChargingStation
+public class ChargingStation implements Iterable<Charger>
 {
     private String id;
     private String city;
     private Location location;
     
     /** * Lista de cargadores. 
-     * Lista esté SIEMPRE ordenada
-     * usando el comparador de 3 criterios.
+     * El PDF exige que esta lista esté SIEMPRE ordenada.
      */
     private List<Charger> chargers;
 
@@ -29,10 +25,13 @@ public class ChargingStation
      */
     public ChargingStation(String city, String id, Location location)
     {
+       if (city == null || id == null || location == null) {
+            throw new NullPointerException("City, ID and Location cannot be null");
+       }
        this.city = city;
        this.id = id;
        this.location = location;
-       this.chargers = new ArrayList<>();   //lista vacía
+       this.chargers = new ArrayList<>();
     }
 
     /**
@@ -51,119 +50,123 @@ public class ChargingStation
         return this.location;
     }
 
-    
     /**
      * @return An unmodifiable list of all {@link Charger}s at the station.
      */
     public List<Charger> getChargers()
     {
-        return Collections.unmodifiableList(this.chargers); //Lista inmodificable
+        return Collections.unmodifiableList(this.chargers);
     }
-    
+
     /**
-     * Retrieves the first free {@link Charger} found at the station.
-     * @return A free {@link Charger}, or possibly throws an exception if none are found (depending on stream implementation details).
-     * **Note: The implementation assumes at least one free charger exists if called.**
+     * Adds a new {@link Charger} to the station and keeps the list sorted.
+     * @param charger The new charger unit.
      */
-    public Charger getFreeCharger()
+    public void addCharger(Charger charger)
     {
-        // Recorremos nuestra lista de cargadores (que ya está ordenada)
-        for (Charger charger : this.chargers) {
-            
-            // Usamos el getter que creamos en Charger.java
-            if (charger.isFree()) {
-                // ¡Encontrado! Es el mejor cargador disponible. Lo devolvemos.
-                return charger;
+        this.chargers.add(charger);
+        // Usamos la clase ComparatorChargersId que ya tienes
+        Collections.sort(this.chargers, new ComparatorChargersId());
+    }
+
+    /**
+     * Finds the best available charger for a specific vehicle.
+     * It iterates through the sorted list and returns the first one that is 
+     * both FREE and COMPATIBLE with the vehicle.
+     * @param v The vehicle requesting a charger.
+     * @return A compatible and free {@link Charger}, or null if none is available.
+     */
+    public Charger getFreeCharger(ElectricVehicle v)
+    {
+        for (Charger c : this.chargers) {
+            // Verificamos DOS cosas: que esté libre Y que acepte este tipo de coche
+            if (c.isFree() && c.checkCompatibility(v)) {
+                return c;
             }
         }
-        // Si el bucle termina, significa que no hay ninguno libre.
         return null;
     }
-    
-       
-    
-    /**
-     * Set the current location of the charging station.
-     * @param location Where it is. Must not be null.
-     * @throws NullPointerException If location is null.
-     */
-    public void setLocation(Location location)
-    {
-         if(location == null) {
-            throw new NullPointerException("La ubicación no puede ser nula.");
-         }
-         this.location = location;
-    }
 
     /**
-     * Returns a string containing complete information about the charging station, 
-     * including details of all its {@link Charger}s and their usage history.
-     * @return A comprehensive string representation of the station.
+     * Checks if the station has at least one charger compatible with the vehicle,
+     * regardless of whether it is currently free or busy.
+     * Used by route planning to discard incompatible stations.
+     * @param v The vehicle checking compatibility.
+     * @return true if there is at least one compatible charger.
      */
-    public String getCompleteInfo()     //Preguntar si esta bien
+    public boolean hasCompatibleCharger(ElectricVehicle v)
     {
-        // Usamos StringBuilder para construir un String de varias líneas
-        StringBuilder sb = new StringBuilder();
-        
-        // 1. Info de la estación (la línea del toString)
-        sb.append(this.toString());
-        
-        // 2. Info completa de cada cargador
-        for (Charger charger : this.chargers) {
-            sb.append("\n"); // Añade un salto de línea
-            
-            // Llama al getCompleteInfo() del cargador
-            sb.append(charger.getCompleteInfo()); 
+        for (Charger c : this.chargers) {
+            if (c.checkCompatibility(v)) {
+                return true;
+            }
         }
-        return sb.toString();
-    }
-    
-
-    /**
-     * Shows a final information summary about the charging station (currently the same as {@code toString()}).
-     * @return A string representation of the station's final status.
-     * @deprecated Consider using {@link #toString()} or {@link #getCompleteInfo()} instead.
-     */
-    public String showFinalInfo()
-    {
-       return this.toString();
+        return false;
     }
 
-    /**
-     * @return A string representation of the charging station, including its ID, city, total number of EVs recharged, and location.
-     */
-    @Override
-    public String toString()
-    {
-        //Formato de SIMPLE_Ouput.txt: (ChargingStation: CC00, Cáceres, 0, 10-5)
-        return "(ChargingStation: " + this.id + ", " +
-               this.city + ", " +
-               this.getNumerEVRecharged() + ", " +
-               this.location.toString() + ")"; // location.toString() da "10-5"
-    }
-    
     /**
      * Calculates the total number of {@link ElectricVehicle}s recharged across all {@link Charger}s at this station.
      * @return The total number of unique recharges.
      */
     public int getNumerEVRecharged(){
         int total = 0;
-        // Recorremos la lista, preguntamos cuás recargas ha hecho y se suma 
         for (Charger charger : this.chargers) {
-            total += charger.getNumerEVRecharged();
+            // Asumimos que Charger tiene un método para contar sus recargas (tamaño de la lista)
+            // Si no tienes un método público, usa charger.getEVsRecharged().size()
+            total += charger.getEVsRecharged().size();
         }
         return total;
     }
-    
+
     /**
-     * Adds a new {@link Charger} to the station.
-     * @param charger The new charger unit.
+     * @return A string representation of the charging station.
      */
-    public void addCharger(Charger charger)
+    @Override
+    public String toString()
     {
-        this.chargers.add(charger);
-        //Reordena la lista
-        Collections.sort(this.chargers, new ComparatorChargersId());
+        return "(ChargingStation: " + this.id + ", " +
+               this.city + ", " +
+               this.getNumerEVRecharged() + ", " +
+               this.location.toString() + ")";
     }
-    
+
+    /**
+     * Devuelve toda la información de la estación y de sus cargadores.
+     * Método necesario para el informe final (Anexo I).
+     * IMPORTANTE: Requiere que Charger tenga el método getCompleteInfo().
+     */
+    public String getCompleteInfo()
+    {
+        StringBuilder sb = new StringBuilder();
+        
+        // 1. Info de la estación
+        sb.append(this.toString());
+        
+        // 2. Info completa de cada cargador
+        for (Charger charger : this.chargers) {
+            sb.append("\n"); // Salto de línea
+            sb.append(charger.getCompleteInfo()); 
+        }
+        return sb.toString();
+    }
+
+    // --- MÉTODOS EXTRA (Iterator, Equals, HashCode) ---
+
+    @Override
+    public Iterator<Charger> iterator() {
+        return chargers.iterator();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        ChargingStation other = (ChargingStation) obj;
+        return Objects.equals(id, other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

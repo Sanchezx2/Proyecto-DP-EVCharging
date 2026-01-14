@@ -1,28 +1,27 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 /**
- * Model a charger unit within a {@link ChargingStation}.
- * It tracks its charging capabilities, fee, and the electric vehicles it has recharged.
- * * @author David J. Barnes and Michael Kölling
+ * Abstract class representing a generic charger.
+ * Subclasses define specific compatibility and pricing rules.
  * @author DP classes 
- * @version 2024.10.07
+ * @version 2025
  */
-public class Charger
+public abstract class Charger
 {
-    private String id;
-    private int chargingSpeed; // kwh
-    private float chargingFee; // € / kwh
+    protected String id;
+    protected int chargingSpeed; // kwh
+    protected float chargingFee; // € / kwh
     
     /** Colección de vehículos que han cargado aquí */
-    private List<ElectricVehicle> eVsRecharged; 
+    protected List<ElectricVehicle> eVsRecharged; 
     
     /** Cantidad total recaudada */
-    private float amountCollected; 
+    protected float amountCollected; 
     
     /** Indica si el cargador está libre u ocupado */
-    private boolean free;
-    
+    protected boolean free;
 
     /**
      * Constructor for objects of class Charger.
@@ -32,133 +31,99 @@ public class Charger
      */
     public Charger(String id, int speed, float fee)
     {
-        // Asigna los valores recibidos
         this.id = id;
         this.chargingSpeed = speed;
         this.chargingFee = fee;
         
-        // Asigna los valores por defecto
         this.eVsRecharged = new ArrayList<>();
-        this.amountCollected = 0.0f;    //Porque es de tipo float
+        this.amountCollected = 0.0f;
         this.free = true;
     }
 
-    
+    // --- MÉTODOS ABSTRACTOS Y LÓGICA DE HERENCIA ---
+
     /**
-     * Returns a string representation of the charger, including its ID, speed, fee, and the number of EVs recharged.
-     * @return A string representation of the charger.
+     * Comprueba si este cargador es compatible con el vehículo dado.
+     * Cada subclase (Standard, Priority, etc.) implementará su propia regla.
      */
+    public abstract boolean checkCompatibility(ElectricVehicle v);
+
+    /**
+     * Realiza la recarga. Calcula el coste (con posibles descuentos/recargos)
+     * y registra la operación.
+     */
+    public float recharge(ElectricVehicle vehicle, int kwsRecharging) {
+        // 1. Verificación de seguridad (aunque ya se chequea antes)
+        if (!checkCompatibility(vehicle)) {
+            return 0.0f; 
+        }
+        
+        // 2. Calcular el coste (usando el método que pueden sobrescribir los hijos)
+        float cost = calculateCost(kwsRecharging);
+        
+        // 3. Actualizar métricas
+        this.amountCollected += cost;
+        this.addEvRecharged(vehicle);
+        
+        return cost;
+    }
+
+    /**
+     * Calcula el coste base. Las subclases pueden sobrescribirlo (ej. SolarCharger).
+     */
+    protected float calculateCost(int kwh) {
+        return kwh * this.chargingFee;
+    }
+
+    // --- MÉTODOS DE GESTIÓN DE DATOS ---
+
+    public void addEvRecharged(ElectricVehicle vehicle){
+        this.eVsRecharged.add(vehicle);
+    }
+    
+    public int getNumerEVRecharged(){
+        return this.eVsRecharged.size();
+    }
+    
+    public List<ElectricVehicle> getEVsRecharged() {
+        return new ArrayList<>(this.eVsRecharged);
+    }
+
+    // --- INFORMES ---
+
+    public String getCompleteInfo()
+    {
+         StringBuilder sb = new StringBuilder();
+         sb.append(this.toString());
+         for(ElectricVehicle ev : this.eVsRecharged) {
+             sb.append("\n"); 
+             sb.append(ev.getInitialFinalInfo()); 
+         }
+         return sb.toString();
+    }
+
     @Override
     public String toString()
     {
-        // Debe coincidir con el formato: (Charger: CC00_003, 80kwh, 0.8€, 0, 0.0€) 
-        return "(Charger: " + this.id + ", " +
+        // Formato: (StandardCharger: CC00_002, 60kwh, 0.6€, 0, 0.00€)
+        // Usamos getClass().getSimpleName() para que salga "StandardCharger", "SolarCharger", etc.
+        return "(" + this.getClass().getSimpleName() + ": " + this.id + ", " +
                this.chargingSpeed + "kwh, " +
                this.chargingFee + "€, " +
                this.getNumerEVRecharged() + ", " +
                this.amountCollected + "€)";
     }
 
-    
-    /**
-     * Returns a complete string representation of the charger, including details of all {@link ElectricVehicle}s it has recharged.
-     * @return A string containing complete information about the charger and its usage history.
-     */
-    public String getCompleteInfo()
-    {
-         // 1. Empezamos con la info normal del toString
-         StringBuilder sb = new StringBuilder();
-         sb.append(this.toString());
-         
-         // 2. Añadimos cada vehículo de la lista (ordenados cronológicamente)
-         for(ElectricVehicle ev : this.eVsRecharged) {
-             sb.append("\n"); // Añade un salto de línea
-             
-             // ¡OJO! Esta línea dará error hasta que rellenemos la clase ElectricVehicle.
-             // Es normal, no te preocupes. Solo la dejamos preparada.
-             sb.append(ev.getInitialFinalInfo()); 
-         }
-         return sb.toString();
-    }
-    
-    /**
-     * Adds an {@link ElectricVehicle} to the list of vehicles that have been recharged by this charger.
-     * @param vehicle The electric vehicle that was recharged.
-     */
-    public void addEvRecharged(ElectricVehicle vehicle){
-        // Usamos el método .add() de ArrayList para añadir el vehículo a nuestra lista
-        this.eVsRecharged.add(vehicle);
-    }
-    
-    /**
-     * @return The total number of {@link ElectricVehicle}s that have been recharged by this charger.
-     */
-    public int getNumerEVRecharged(){
-        // Usamos el método .size() de ArrayList para saber cuántos elementos hay
-        return this.eVsRecharged.size();
-    }
-    
-    
-    /**
-     * Simulates the charging process for an {@link ElectricVehicle}.
-     * Increases the amount collected and registers the vehicle as recharged.
-     * @param vehicle The vehicle to recharge.
-     * @param kwsRecharging The amount of kWh to be recharged.
-     * @return The cost of the recharge operation.
-     */
-    public float recharge(ElectricVehicle vehicle,int kwsRecharging){
-        // 1. Calcular el coste
-        float cost = kwsRecharging * this.chargingFee;
-        
-        // 2. Sumar al total recaudado
-        this.amountCollected += cost;
-        
-        // 3. Añadir el vehículo a la lista de recargados
-        this.addEvRecharged(vehicle);
-        
-        // 4. Devolver el coste de esta operación
-        return cost;
-    }
-    
-    // --- MÉTODOS GETTERS Y SETTERS ---
+    // --- GETTERS Y SETTERS ---
 
-    /**
-     * @return El ID único del cargador.
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * @return La velocidad de carga en kwh.
-     */
-    public int getChargingSpeed() {
-        return chargingSpeed;
-    }
-
-    /**
-     * @return La tarifa de carga en €/kwh.
-     */
-    public float getChargingFee() {
-        return chargingFee;
-    }
+    public String getId() { return id; }
+    public int getChargingSpeed() { return chargingSpeed; }
+    public float getChargingFee() { return chargingFee; }
+    public boolean isFree() { return free; }
+    public void setFree(boolean free) { this.free = free; }
     
-    /**
-     * @return true si el cargador está libre, false si está ocupado.
-     */
-    public boolean isFree() {
-        return free;
-    }
+    // --- EQUALS Y HASHCODE ---
     
-    /**
-     * Permite cambiar el estado del cargador (libre/ocupado).
-     * @param free El nuevo estado.
-     */
-    public void setFree(boolean free) {
-        this.free = free;
-    }
-    
-    //Equals y hashCode implmentado
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

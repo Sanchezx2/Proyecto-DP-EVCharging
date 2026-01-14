@@ -38,7 +38,7 @@ public class EVDemo
     private List<ChargingStation> stations;
     
     /** Constant for selecting the demo scenario, using the {@link DemoType} enumeration. */
-    private static final DemoType DEMO=DemoType.SIMPLE;
+    private static final DemoType DEMO=DemoType.ADVANCED;
     
         
     /**
@@ -48,7 +48,7 @@ public class EVDemo
      */
     public EVDemo()
     {
-        this.company = new EVCompany("Compañía EVCharging Cáceres"); // 
+        this.company = new EVCompany("EVCharging Cáceres"); // 
         this.vehicles = new ArrayList<>();
         this.stations = new ArrayList<>();
         reset();
@@ -112,19 +112,45 @@ public class EVDemo
      */
     private void createElectricVehicles() {
         Location [] locations = {new Location(10,13), new Location(8,4), new Location(8,4), new Location(15,10), 
-                                new Location(1,1), new Location(2,2), new Location(11,13), new Location(14,16)};
+                                new Location(1,1), new Location(2,2), new Location(11,13), new Location(14,16), 
+                                new Location(5,5), new Location(19,0)};
         Location [] targetLocations = {new Location(1,1), new Location(19,19), new Location(12,17), new Location(4,4), 
-                                        new Location(1,10), new Location(5,5), new Location(8,7), new Location(19,19)};
+                                        new Location(1,10), new Location(5,5), new Location(8,7), new Location(19,19),
+                                        new Location(0,0), new Location(10,10)};
                                         
-        //createLocations(locations,targetLocations);
-        for (int i=0;i < DEMO.getNumVehiclesToCreate();i++){
-            ElectricVehicle ev = new ElectricVehicle(company, locations[i],targetLocations[i],("EV"+i),(i+"CCC"),(i+1)*15);
+        // Generamos vehículos rotando los tipos: Priority -> Standard -> Premium -> VTC
+        for (int i=0; i < DEMO.getNumVehiclesToCreate(); i++){
+            ElectricVehicle ev;
+            String plate = i + "CCC";
+            String name = "EV" + i;
+            int battery = (i+1)*15;
+            Location start = locations[i % locations.length]; // Usar módulo por si hay más vehículos que locs
+            Location target = targetLocations[i % targetLocations.length];
+
+            // Lógica de rotación para crear distintos tipos (0=Priority, 1=Standard, etc.)
+            int type = i % 4; 
+            switch(type) {
+                case 0:
+                    ev = new PriorityEV(company, start, target, name, plate, battery);
+                    break;
+                case 1:
+                    ev = new StandardEV(company, start, target, name, plate, battery);
+                    break;
+                case 2:
+                    ev = new PremiumEV(company, start, target, name, plate, battery);
+                    break;
+                case 3:
+                    ev = new VtcEV(company, start, target, name, plate, battery);
+                    break;
+                default:
+                    ev = new StandardEV(company, start, target, name, plate, battery);
+            }
+            
             vehicles.add(ev);
             company.addElectricVehicle(ev);
         }
         
         Collections.sort(vehicles, new ComparatorEVPlate());
-        
     }
     
 
@@ -133,10 +159,12 @@ public class EVDemo
      * The stations list is sorted by ID using {@link ComparatorChargingStationId}.
      */
     private void createStations() {  
-        Location [] locations = {new Location(10,5), new Location(10,11), new Location(14,16), new Location(8,4)};
+        Location [] locations = {new Location(10,5), new Location(10,11), new Location(14,16), new Location(8,4), new Location(2,2)};
                                 
-        for (int i=0;i<DEMO.getNumStationsToCreate();i++){
-            ChargingStation newStation = new ChargingStation("Cáceres","CC0" + i,locations[i]);
+        for (int i=0; i<DEMO.getNumStationsToCreate(); i++){
+            // Ojo: Aseguramos tener ubicaciones suficientes
+            Location loc = locations[i % locations.length];
+            ChargingStation newStation = new ChargingStation("Cáceres","CC0" + i, loc);
             stations.add(newStation);
             company.addChargingStation(newStation);
         }
@@ -150,17 +178,39 @@ public class EVDemo
      */
     private void createChargers() {  
             
+            int numChargers = DEMO.getNumChargersToCreate();
+            int numStations = DEMO.getNumStationsToCreate();
+
             //Recorremos la lista de ESTACIONES
-            for (ChargingStation station : stations){
+            for (int j=0; j < stations.size(); j++){
+                ChargingStation station = stations.get(j);
                 
-                //Para cada estación, creamos 4 cargadores
-                for (int i=0;i<DEMO.getNumChargersToCreate();i++){
+                //Para cada estación, creamos los cargadores requeridos
+                for (int i=0; i < numChargers; i++){
                     
-                    //Creamos el cargador (esta línea ya venía en el esqueleto)
-                    Charger newCharger = new Charger(station.getId() + "_00" + i,((i+1)*20),((i+1)*0.20f));
+                    Charger ch;
+                    String id = station.getId() + "_00" + i;
+                    int speed = (i+j+1)*20; // Velocidad variable para que no sean iguales
+                    float fee = (i+1)*0.20f;
+
+                    // Lógica compleja de distribución para que coincida con el enunciado (Solar, Ultra, Priority, Standard)
+                    // Esta lógica rota los tipos según el índice de la estación (j) y del cargador (i)
+                    if (i % numChargers == (j % numStations - 1)) {
+                         // Caso especial para rotación negativa o ajuste del índice
+                         ch = new SolarCharger(id, speed, fee);
+                    }    
+                    else if (i % numChargers == (j % numStations)) {
+                         ch = new UltraFastCharger(id, speed, fee);
+                    } 
+                    else if (i % numChargers == (j % numStations) + 1) {
+                         ch = new PriorityCharger(id, speed, fee);
+                    }    
+                    else {
+                         ch = new StandardCharger(id, speed, fee);
+                    }
                     
                     //Añadimos el cargador a la ESTACIÓN, addCharger ya ordena 
-                    station.addCharger(newCharger);
+                    station.addCharger(ch);
                 }
             }    
         }
@@ -215,7 +265,7 @@ public class EVDemo
     /**
      * Displays the final information after the simulation has run.
      * Vehicles are sorted by arrival step using {@link ComparatorEVArrivingStep}.
-     * Stations are sorted by the number of recharges using {@link ComparatorChargingStationNumerRecharged}.
+     * Stations are sorted by the number of recharges using {@link ComparatorChargingStationNumberRecharged}.
      */
     private void showFinalInfo() {
  
@@ -243,10 +293,15 @@ public class EVDemo
         Collections.sort(stations, new ComparatorChargingStationNumberRecharged());
         
         // 2. Imprimimos la INFO COMPLETA de cada estación
-        for (ChargingStation station : stations) {
-            // Usamos getCompleteInfo() como pide el PDF [cite: 364, 375]
+        for (ChargingStation station : stations) { // Usamos getCompleteInfo() como pide el PDF 
             System.out.println(station.getCompleteInfo());
         }
+        
+        // 3. INFORMACIÓN DE LA COMPAÑÍA (Nuevo Requisito Parte 2)
+        // Aquí deberías mostrar el registro de notificaciones si lo tienes implementado en EVCompany
+        // System.out.println("(--------------)");
+        // System.out.println("( Company Info )");
+        // ... llamada a company.showInfo() ...
     }
     
     
