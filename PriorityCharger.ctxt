@@ -1,0 +1,9 @@
+#BlueJ class context
+comment0.target=PriorityCharger
+comment1.params=id\ speed\ fee
+comment1.target=PriorityCharger(java.lang.String,\ int,\ float)
+comment2.params=v
+comment2.target=boolean\ checkCompatibility(ElectricVehicle)
+comment3.params=
+comment3.target=java.lang.String\ toString()
+numComments=4

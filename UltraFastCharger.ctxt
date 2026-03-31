@@ -1,0 +1,11 @@
+#BlueJ class context
+comment0.target=UltraFastCharger
+comment1.params=id\ speed\ fee
+comment1.target=UltraFastCharger(java.lang.String,\ int,\ float)
+comment2.params=v
+comment2.target=boolean\ checkCompatibility(ElectricVehicle)
+comment3.params=kwh
+comment3.target=float\ calculateCost(int)
+comment4.params=
+comment4.target=java.lang.String\ toString()
+numComments=5

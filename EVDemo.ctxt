@@ -1,0 +1,37 @@
+#BlueJ class context
+comment0.target=EVDemo
+comment0.text=\r\n\ Provides\ a\ simple\ demonstration\ and\ simulation\ environment\ for\ the\ \r\n\ Electric\ Vehicle\ (EV)\ and\ Charging\ Station\ model.\r\n\ It\ sets\ up\ the\ environment\ and\ runs\ the\ simulation\ for\ a\ fixed\ number\ of\ steps.\r\n\r\n\ Scenarios\:\ \r\n\ <ul>\r\n\ <li>Demo\ SIMPLE\ (demo\=DemoType.SIMPLE)\:\ Two\ vehicles\ are\ created.</li>\r\n\ <li>Demo\ MEDIUM\ (demo\=DemoType.MEDIUM)\:\ Five\ vehicles\ are\ created.</li>\r\n\ <li>Demo\ ADVANCED(demo\=DemoType.ADVANCED)\:\ Eight\ vehicles\ are\ created.</li>\r\n\ </ul>\r\n\ *\ @author\ DP\ Clasess\r\n\ @version\ 2025\r\n
+comment1.params=
+comment1.target=EVDemo()
+comment1.text=\r\n\ Constructor\ for\ objects\ of\ class\ EVDemo.\r\n\ Initializes\ the\ company,\ vehicles,\ and\ stations\ lists,\ and\ sets\ the\ number\ of\ \r\n\ vehicles\ based\ on\ the\ {@code\ DEMO}\ constant\ before\ calling\ {@code\ reset()}.\r\n
+comment10.params=
+comment10.target=void\ showFinalInfo()
+comment10.text=\r\n\ Displays\ the\ final\ information\ after\ the\ simulation\ has\ run.\r\n\ Vehicles\ are\ sorted\ by\ arrival\ step\ using\ {@link\ ComparatorEVArrivingStep}.\r\n\ Stations\ are\ sorted\ by\ the\ number\ of\ recharges\ using\ {@link\ ComparatorChargingStationNumberRecharged}.\r\n
+comment11.params=
+comment11.target=void\ main()
+comment11.text=\r\n\ The\ main\ entry\ point\ for\ running\ the\ EVDemo\ simulation.\r\n\ Creates\ an\ instance\ of\ {@code\ EVDemo}\ and\ starts\ the\ simulation.\r\n
+comment2.params=
+comment2.target=void\ run()
+comment2.text=\r\n\ Run\ the\ demo\ for\ a\ fixed\ number\ of\ steps\ (50\ steps).\r\n\ In\ each\ step,\ all\ vehicles\ perform\ their\ action.\r\n
+comment3.params=step
+comment3.target=void\ step(int)
+comment3.text=\r\n\ Run\ the\ demo\ for\ one\ step\ by\ requesting\ all\ vehicles\ to\ act.\r\n\ @param\ step\ The\ current\ step\ number\ of\ the\ simulation.\r\n
+comment4.params=
+comment4.target=void\ reset()
+comment4.text=\r\n\ Reset\ the\ demo\ to\ a\ starting\ point.\r\n\ Clears\ existing\ vehicles\ and\ stations,\ resets\ the\ company,\ and\ re-creates\r\n\ the\ initial\ setup.\r\n
+comment5.params=
+comment5.target=void\ createElectricVehicles()
+comment5.text=\r\n\ Creates\ the\ {@link\ ElectricVehicle}s\ based\ on\ {@code\ numVehiclesCreated},\ assigns\ them\r\n\ starting\ and\ target\ {@link\ Location}s,\ and\ adds\ them\ to\ the\ company.\r\n\ The\ vehicles\ list\ is\ sorted\ by\ plate\ using\ {@link\ ComparatorEVPlate}.\r\n
+comment6.params=
+comment6.target=void\ createStations()
+comment6.text=\r\n\ Creates\ predefined\ {@link\ ChargingStation}s\ and\ adds\ them\ to\ the\ company.\r\n\ The\ stations\ list\ is\ sorted\ by\ ID\ using\ {@link\ ComparatorChargingStationId}.\r\n
+comment7.params=
+comment7.target=void\ createChargers()
+comment7.text=\r\n\ Creates\ a\ fixed\ number\ of\ {@link\ Charger}\ units\ for\ each\ {@link\ ChargingStation}\r\n\ and\ orders\ the\ chargers\ within\ each\ station.\r\n
+comment8.params=
+comment8.target=void\ configureRoutes()
+comment8.text=\r\n\ Instructs\ each\ {@link\ ElectricVehicle}\ to\ calculate\ its\ initial\ route.\r\n\ This\ determines\ if\ an\ intermediate\ recharging\ stop\ is\ necessary.\r\n
+comment9.params=
+comment9.target=void\ showInitialInfo()
+comment9.text=\r\n\ Displays\ the\ initial\ information\ for\ the\ simulation,\ including\ \r\n\ the\ details\ of\ all\ {@link\ ElectricVehicle}s\ and\ {@link\ ChargingStation}s.\r\n
+numComments=12

@@ -38,7 +38,7 @@ public class EVDemo
     private List<ChargingStation> stations;
     
     /** Constant for selecting the demo scenario, using the {@link DemoType} enumeration. */
-    private static final DemoType DEMO=DemoType.ADVANCED;
+    private static final DemoType DEMO=DemoType.SIMPLE;
     
         
     /**

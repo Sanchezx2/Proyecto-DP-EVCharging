@@ -1,0 +1,7 @@
+#BlueJ class context
+comment0.target=ComparatorChargingStationNumberRecharged
+comment0.text=\r\n\ Compares\ two\ {@link\ ChargingStation}\ objects\ based\ primarily\ on\ the\ number\ of\r\n\ {@link\ ElectricVehicle}s\ recharged\ in\ descending\ order.\r\n\ If\ the\ number\ of\ recharges\ is\ equal,\ it\ uses\ {@link\ ComparatorChargingStationId}\r\n\ to\ compare\ by\ ID\ in\ ascending\ order\ as\ a\ tie-breaker.\r\n\ *\ @author\ DP\ Clasess\r\n\ @version\ 2023\r\n
+comment1.params=st1\ st2
+comment1.target=int\ compare(ChargingStation,\ ChargingStation)
+comment1.text=\r\n\ Compares\ its\ two\ {@link\ ChargingStation}\ arguments\ for\ order.\r\n\ *\ @param\ st1\ The\ first\ charging\ station\ to\ be\ compared.\r\n\ @param\ st2\ The\ second\ charging\ station\ to\ be\ compared.\r\n\ @return\ A\ negative\ integer\ if\ st1\ has\ more\ recharges\ or\ an\ equal\ number\ but\ smaller\ ID,\ \r\n\ zero\ if\ both\ are\ equal,\ or\ a\ positive\ integer\ otherwise.\r\n
+numComments=2

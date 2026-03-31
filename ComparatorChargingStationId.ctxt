@@ -1,0 +1,7 @@
+#BlueJ class context
+comment0.target=ComparatorChargingStationId
+comment0.text=\r\n\ Compares\ two\ {@link\ ChargingStation}\ objects\ based\ on\ their\ ID\ in\ ascending\ order.\r\n\ This\ can\ be\ used\ for\ sorting\ lists\ of\ charging\ stations.\r\n\ @author\ DP\ Clasess\r\n\ @version\ 2023\r\n
+comment1.params=st1\ st2
+comment1.target=int\ compare(ChargingStation,\ ChargingStation)
+comment1.text=\r\n\ Compares\ its\ two\ {@link\ ChargingStation}\ arguments\ for\ order.\r\n\ The\ comparison\ is\ based\ on\ the\ lexicographical\ order\ of\ their\ IDs.\r\n\ @param\ st1\ The\ first\ charging\ station\ to\ be\ compared.\r\n\ @param\ st2\ The\ second\ charging\ station\ to\ be\ compared.\r\n\ @return\ A\ negative\ integer,\ zero,\ or\ a\ positive\ integer\ as\ the\ first\r\n\ station's\ ID\ is\ less\ than,\ equal\ to,\ or\ greater\ than\ the\ second.\r\n
+numComments=2

@@ -1,0 +1,16 @@
+#BlueJ class context
+comment0.target=ElectricVehicleTest
+comment0.text=\r\n\ Pruebas\ unitarias\ para\ la\ clase\ ElectricVehicle.\r\n\ Utiliza\ StandardEV\ como\ implementaci\u00F3n\ concreta\ para\ las\ pruebas.\r\n
+comment1.params=
+comment1.target=void\ setUp()
+comment1.text=\r\n\ Configuraci\u00F3n\ inicial\ antes\ de\ cada\ prueba.\r\n
+comment2.params=
+comment2.target=void\ testCreation()
+comment2.text=\r\n\ Prueba\ que\ el\ veh\u00EDculo\ se\ crea\ correctamente.\r\n
+comment3.params=
+comment3.target=void\ testMoveReducesBattery()
+comment3.text=\r\n\ Prueba\ que\ moverse\ reduce\ la\ bater\u00EDa\ en\ 5\ unidades\ (MOVINGCOST).\r\n
+comment4.params=
+comment4.target=void\ testEnoughBattery()
+comment4.text=\r\n\ Prueba\ que\ el\ coche\ sabe\ si\ tiene\ bater\u00EDa\ suficiente.\r\n\ Distancia\ 10\ pasos\ *\ 5\ kwh\ \=\ 50\ kwh\ necesarios.\r\n
+numComments=5

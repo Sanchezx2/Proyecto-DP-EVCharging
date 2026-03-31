@@ -1,0 +1,7 @@
+#BlueJ class context
+comment0.target=ComparatorEVPlate
+comment0.text=\r\n\ Compara\ dos\ {@link\ ElectricVehicle}\ por\ su\ matr\u00EDcula\ (plate)\r\n\ en\ orden\ ascendente\ (alfab\u00E9tico).\r\n\ Esta\ clase\ es\ necesaria\ para\ cumplir\ el\ requisito\ del\ PDF\ .\r\n
+comment1.params=ev1\ ev2
+comment1.target=int\ compare(ElectricVehicle,\ ElectricVehicle)
+comment1.text=\r\n\ Compara\ dos\ veh\u00EDculos\ por\ su\ matr\u00EDcula.\r\n\ @param\ ev1\ El\ primer\ veh\u00EDculo.\r\n\ @param\ ev2\ El\ segundo\ veh\u00EDculo.\r\n\ @return\ un\ n\u00FAmero\ negativo,\ 0,\ o\ positivo.\r\n
+numComments=2

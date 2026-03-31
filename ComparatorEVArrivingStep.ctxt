@@ -1,0 +1,7 @@
+#BlueJ class context
+comment0.target=ComparatorEVArrivingStep
+comment0.text=\r\n\ Compara\ dos\ {@link\ ElectricVehicle}\ para\ el\ informe\ final.\r\n\ Criterio\ 1\:\ Turno\ de\ llegada\ (arrivingStep)\ -\ Ascendente.\r\n\ Criterio\ 2\:\ Matr\u00EDcula\ (plate)\ -\ Ascendente\ (para\ desempate).\r\n\ Requerido\ por\ el\ PDF.\r\n
+comment1.params=ev1\ ev2
+comment1.target=int\ compare(ElectricVehicle,\ ElectricVehicle)
+comment1.text=\r\n\ Compara\ dos\ veh\u00EDculos\ por\ turno\ de\ llegada\ y\ luego\ matr\u00EDcula.\r\n\ @param\ ev1\ El\ primer\ veh\u00EDculo.\r\n\ @param\ ev2\ El\ segundo\ veh\u00EDculo.\r\n\ @return\ -1,\ 0,\ o\ 1.\r\n
+numComments=2

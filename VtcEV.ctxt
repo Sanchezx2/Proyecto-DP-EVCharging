@@ -1,0 +1,5 @@
+#BlueJ class context
+comment0.target=VtcEV
+comment1.params=company\ location\ targetLocation\ name\ plate\ batteryCapacity
+comment1.target=VtcEV(EVCompany,\ Location,\ Location,\ java.lang.String,\ java.lang.String,\ int)
+numComments=2

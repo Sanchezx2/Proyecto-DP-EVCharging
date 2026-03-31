@@ -1,0 +1,8 @@
+#BlueJ class context
+comment0.target=PriorityEV
+comment1.params=company\ location\ targetLocation\ name\ plate\ batteryCapacity
+comment1.target=PriorityEV(EVCompany,\ Location,\ Location,\ java.lang.String,\ java.lang.String,\ int)
+comment2.params=step
+comment2.target=void\ act(int)
+comment2.text=\r\n\ Sobrescribe\ act\ para\ moverse\ 2\ veces\ por\ turno.\r\n
+numComments=3
