@@ -6,9 +6,6 @@
 
 Este proyecto ha sido realizado por:
 * Carlos Sánchez Sánchez
-* Jose Antonio Díaz Parralejo
-* Álvaro Corvillo Moreno
-
 
 == 2. Clase de Ejecución ==
 
