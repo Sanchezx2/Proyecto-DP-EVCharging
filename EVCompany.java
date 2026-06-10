@@ -9,7 +9,10 @@ import java.util.*;
 public class EVCompany  
 {
     /** El coste de batería (en kwh) por cada paso que da un vehículo */
-    public static final int MOVINGCOST = 5; // 
+    public static final int MOVINGCOST = 5;
+    
+    /** Atributo estático privado que guardará la dirección única */
+    private static EVCompany instancia = null;
     
     /** Nombre de la compañía */
     private String name;
@@ -19,17 +22,25 @@ public class EVCompany
     
     /** Lista de todas las estaciones de carga gestionadas */
     private List<ChargingStation> stations;
-
+    
     /**
      * Constructor for objects of class EVCompany.
      * @param name The name of the company.
      */
-    public EVCompany(String name)
+    private EVCompany(String name)
     {
         this.name = name;    
         // Inicializamos las listas como vacías
         this.subscribedVehicles = new ArrayList<>();
         this.stations = new ArrayList<>();
+    }
+    /** Método estático global para obtener la instancia única */
+    public static EVCompany getInstance() {
+        if (instancia == null) {
+            // Aquí llamamos al constructor privado pasándole el nombre predefinido
+            instancia = new EVCompany("EVCharging Cáceres");
+        }
+        return instancia;
     }
 
      /**

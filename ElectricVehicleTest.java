@@ -19,13 +19,16 @@ public class ElectricVehicleTest
     @Before
     public void setUp()
     {
-        // EVCompany requiere un nombre (String)
-        EVCompany company = new EVCompany("Test Company"); 
+        // [CAMBIO AQUÍ]: Conseguimos la instancia única del Singleton
+        EVCompany company = EVCompany.getInstance();
+        
+        // [CONSEJO]: Limpiamos la compañía para que el test empiece de cero y limpio
+        company.reset();
 
         startLoc = new Location(0, 0);
         targetLoc = new Location(10, 10);
         
-        // Creamos el vehículo StandardEV con los argumentos necesarios
+        // Creamos el vehículo StandardEV pasándole la instancia del Singleton
         ev = new StandardEV(company, startLoc, targetLoc, "Modelo Test", "TEST-01", 100);
     }
 

@@ -48,7 +48,8 @@ public class EVDemo
      */
     public EVDemo()
     {
-        this.company = new EVCompany("EVCharging Cáceres"); // 
+        //this.company = new EVCompany("EVCharging Cáceres");
+        this.company = EVCompany.getInstance();
         this.vehicles = new ArrayList<>();
         this.stations = new ArrayList<>();
         reset();
