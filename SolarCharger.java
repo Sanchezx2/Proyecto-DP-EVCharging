@@ -13,10 +13,4 @@ public class SolarCharger extends Charger {
         float baseCost = super.calculateCost(kwh);
         return baseCost * 0.90f; // Aplica 10% descuento
     }
-    
-    @Override
-    public String toString() {
-        return "(SolarCharger: " + id + ", " + chargingSpeed + "kwh, " + chargingFee + "€, " + 
-               eVsRecharged.size() + ", " + amountCollected + "€)";
-    }
 }

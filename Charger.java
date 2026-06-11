@@ -107,7 +107,7 @@ public abstract class Charger
     {
         // Formato: (StandardCharger: CC00_002, 60kwh, 0.6€, 0, 0.00€)
         // Usamos getClass().getSimpleName() para que salga "StandardCharger", "SolarCharger", etc.
-        return "(" + this.getClass().getSimpleName() + ": " + this.id + ", " +
+        return "(" + this.getClass().getName() + ": " + this.id + ", " +
                this.chargingSpeed + "kwh, " +
                this.chargingFee + "€, " +
                this.getNumerEVRecharged() + ", " +
