@@ -190,8 +190,8 @@ public abstract class ElectricVehicle
             
             // Log actualizado con el tipo de vehículo
             System.out.println("(step: " + step + " - " + this.getClass().getSimpleName() + ": " + this.plate + 
-                               " recharges: " + kwsNeeded + "kwh at charger: " + 
-                               charger.getId() + " with cost: " + cost + "€ ********)");
+                   " recharges: " + kwsNeeded + "kwh at charger: " + 
+                   charger.getId() + " with cost: " + String.format(java.util.Locale.US, "%.2f", cost) + "€ ********)");
             calculateRoute();
         }
     } 
