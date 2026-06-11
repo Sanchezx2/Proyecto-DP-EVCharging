@@ -7,12 +7,14 @@
  */
 public enum DemoType
 {
-    /** Simple scenario: 2 vehicles, 4 stations, 4 chargers per station. */
-    SIMPLE ("SIMPLE DEMO", 2, 4, 4),
-    /** Medium scenario: 5 vehicles, 4 stations, 4 chargers per station. */
-    MEDIUM ("MEDIUM DEMO", 5, 4, 4),
-    /** Advanced scenario: 8 vehicles, 4 stations, 4 chargers per station. */
-    ADVANCED ("ADVANCED DEMO", 8, 4, 4);
+    /** Simple scenario: 2 vehicles, 5 stations, 4 chargers per station. */
+    NANO("NANO DEMO", 2, 2, 3),
+    /** Simple scenario: 2 vehicles, 5 stations, 4 chargers per station. */
+    SIMPLE ("SIMPLE DEMO", 4, 5, 4),
+    /** Medium scenario: 5 vehicles, 5 stations, 4 chargers per station. */
+    MEDIUM ("MEDIUM DEMO", 7, 5, 4),
+    /** Advanced scenario: 8 vehicles, 5 stations, 4 chargers per station. */
+    ADVANCED ("ADVANCED DEMO", 10, 5, 4);
     
     /** Descriptive name of the scenario. */
     private String name;

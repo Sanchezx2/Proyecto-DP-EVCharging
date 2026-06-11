@@ -209,6 +209,7 @@ public abstract class ElectricVehicle
         // Pero el formato pide "ElectricVehicle: ..." o el nombre específico? 
         // En los logs nuevos sale el tipo: (step: 47 - StandardEV: ...)
         // Mantengamos el toString interno simple.
+        sb.append(this.name).append(", ");
         sb.append(this.plate).append(", ");
         sb.append(this.batteryCapacity).append("kwh, ");
         sb.append(this.batteryLevel).append("kwh, ");

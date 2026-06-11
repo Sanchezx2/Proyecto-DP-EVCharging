@@ -38,7 +38,7 @@ public class EVCompany
     public static EVCompany getInstance() {
         if (instancia == null) {
             // Aquí llamamos al constructor privado pasándole el nombre predefinido
-            instancia = new EVCompany("EVCharging Cáceres");
+            instancia = new EVCompany("Compañía EVCharging Cáceres");
         }
         return instancia;
     }
