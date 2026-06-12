@@ -8,50 +8,43 @@ public class PriorityEV extends ElectricVehicle {
      */
     @Override
     public void act(int step) {
-        // 1. Si ya está en su destino final definitivo, suma inactividad de turno y termina
         if (this.location.equals(this.targetLocation)) {
             this.incrementIdleCount();
             return;
         }
-    
-        boolean seHaMover = false;
-    
-        // Damos un máximo de dos saltos por turno
+
+        boolean seHaMovido = false;
+
         for (int salto = 0; salto < 2; salto++) {
             Location currentTarget = (this.hasRechargingLocation()) ? this.rechargingLocation : this.targetLocation;
             
             if (this.location.equals(currentTarget)) {
                 break; 
             }
-    
-            // CORRECCIÓN: El freno de seguridad solo se activa si la batería está completamente vacía (nivel <= 0)
-            // o si no tiene suficiente para dar un único paso (5kwh)
-            if (this.batteryLevel < 5) {
-                break;
+
+            // EL FRENO ORIGINAL SALVADOR: Si no tiene estación y no llega a su destino, se queda quieta.
+            if (!this.hasRechargingLocation() && !this.enoughBattery(this.distanceToTheTargetLocation())) {
+                break; 
             }
-    
-            // Dar el salto
+
             Location nextStep = this.location.nextLocation(currentTarget);
             this.setLocation(nextStep);
-            this.reduceBatteryLevel(); // Resta 5kwh por celda
-            seHaMover = true;
-    
-            // Comprobamos si este salto le ha hecho llegar a la estación de recarga
+            this.reduceBatteryLevel(); 
+            seHaMovido = true;
+
             if (this.hasRechargingLocation() && this.location.equals(this.rechargingLocation)) {
                 this.recharge(step); 
                 break; 
             } 
-            // Comprobamos si este salto le ha hecho llegar al destino definitivo
             else if (this.location.equals(this.targetLocation)) {
                 this.arrivingStep = step;
                 System.out.println("(step: " + step + " - " + this.getClass().getSimpleName() + ": " + this.plate + " at target destination ********)");
                 break; 
             }
         }
-    
-        // CORRECCIÓN REGLA DE TUTORÍA: Si el coche no se ha podido mover en todo el turno 
-        // porque está esperando en la estación o no tiene batería, suma 1 al idleCount del turno global
-        if (!seHaMover) {
+
+        // Si el freno actuó y no dio ningún salto, se considera inactividad
+        if (!seHaMovido) {
             this.incrementIdleCount();
         }
     }
