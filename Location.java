@@ -37,7 +37,7 @@ public class Location
      * @return The next {@link Location} one step closer to the destination. Returns the destination
      * if this location is already the destination.
      */
-public Location nextLocation(Location destination)
+    public Location nextLocation(Location destination)
     {
         // 1. Empezamos con nuestra posición actual
         int nextX = this.x;

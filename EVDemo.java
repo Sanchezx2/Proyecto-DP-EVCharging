@@ -71,6 +71,7 @@ public class EVDemo
             vehicles.add(ev); 
             company.addElectricVehicle(ev);
         }
+        Collections.sort(this.vehicles, new ComparatorEVPlate());
     }
 
     private void createStations() {  
@@ -81,25 +82,26 @@ public class EVDemo
             stations.add(newStation); // Los guardamos en nuestra lista local
             company.addChargingStation(newStation);
         }
+        Collections.sort(this.stations, new ComparatorChargingStationId());
     }
 
     private void createChargers() {  
-        List<ChargingStation> stations = company.getCityStations();
-        int j=0;
-        for (ChargingStation station : stations){
-            for (int i=0; i < DEMO.getNumChargersToCreate(); i++){
+        //Usamos nuestra lista local 'this.stations' que SÍ está perfectamente ordenada por ID
+        int j = 0;
+        for (ChargingStation station : this.stations){
+            for (int i = 0; i < DEMO.getNumChargersToCreate(); i++){
                 Charger ch;
-                if (i % DEMO.getNumChargersToCreate() == (j % DEMO.getNumStationsToCreate()-1)) {
-                    ch = new SolarCharger(station.getId() + "_00" + i, ((i+j+1)*20), ((i+1)*0.20f));
+                if (i % DEMO.getNumChargersToCreate() == (j % DEMO.getNumStationsToCreate() - 1)) {
+                    ch = new SolarCharger(station.getId() + "_00" + i, ((i + j + 1) * 20), ((i + 1) * 0.20f));
                 }    
                 else if (i % DEMO.getNumChargersToCreate() == (j % DEMO.getNumStationsToCreate())) {
-                    ch = new UltraFastCharger(station.getId() + "_00" + i, ((i+j+1)*20), ((i+1)*0.20f));
+                    ch = new UltraFastCharger(station.getId() + "_00" + i, ((i + j + 1) * 20), ((i + 1) * 0.20f));
                 } 
-                else if (i % DEMO.getNumChargersToCreate() == (j % DEMO.getNumStationsToCreate())+1) {
-                    ch = new PriorityCharger(station.getId() + "_00" + i, ((i+j+1)*20), ((i+1)*0.20f));
+                else if (i % DEMO.getNumChargersToCreate() == (j % DEMO.getNumStationsToCreate() + 1)) {
+                    ch = new PriorityCharger(station.getId() + "_00" + i, ((i + j + 1) * 20), ((i + 1) * 0.20f));
                 }    
                 else {
-                    ch = new StandardCharger(station.getId() + "_00" + i, ((i+1)*20), ((i+1)*0.20f));
+                    ch = new StandardCharger(station.getId() + "_00" + i, ((i + 1) * 20), ((i + 1) * 0.20f));
                 }    
                 station.addCharger(ch);
             }

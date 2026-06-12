@@ -78,7 +78,8 @@ public class ChargingStation implements Iterable<Charger>
      */
     public Charger getFreeCharger(ElectricVehicle v)
     {
-        for (int i = this.chargers.size() - 1; i >= 0; i--) {
+        // Cambiado a recorrido normal (ascendente de 0 a size)
+        for (int i = 0; i < this.chargers.size(); i++) {
             Charger c = this.chargers.get(i);
             if (c.isFree() && c.checkCompatibility(v)) {
                 return c;
@@ -96,7 +97,8 @@ public class ChargingStation implements Iterable<Charger>
      */
     public boolean hasCompatibleCharger(ElectricVehicle v)
     {
-        for (int i = this.chargers.size() - 1; i >= 0; i--) {
+        // Cambiado a recorrido normal (de 0 a size) para mantener la coherencia absoluta
+        for (int i = 0; i < this.chargers.size(); i++) {
             Charger c = this.chargers.get(i);
             if (c.checkCompatibility(v)) {
                 return true;

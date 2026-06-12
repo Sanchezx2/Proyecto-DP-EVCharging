@@ -174,7 +174,7 @@ public abstract class ElectricVehicle
         int kwsNeeded = this.batteryCapacity - this.batteryLevel;
         ChargingStation station = company.getChargingStation(this.location);
         
-        // NUEVO: Pedimos un cargador COMPATIBLE y libre
+        //Pedimos un cargador COMPATIBLE y libre
         Charger charger = station.getFreeCharger(this); 
         
         if (charger != null) {
@@ -187,7 +187,6 @@ public abstract class ElectricVehicle
             this.batteryLevel = this.batteryCapacity;
             this.rechargingLocation = null;
             charger.setFree(true);
-            
             // Log actualizado con el tipo de vehículo
             System.out.println("(step: " + step + " - " + this.getClass().getSimpleName() + ": " + this.plate + 
                    " recharges: " + kwsNeeded + "kwh at charger: " + 
