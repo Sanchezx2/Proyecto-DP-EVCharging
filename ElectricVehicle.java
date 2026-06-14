@@ -189,9 +189,13 @@ public abstract class ElectricVehicle
             charger.setFree(true);
             // Log actualizado con el tipo de vehículo
             System.out.println("(step: " + step + " - " + this.getClass().getSimpleName() + ": " + this.plate + 
-                   " recharges: " + kwsNeeded + "kwh at charger: " + 
-                   charger.getId() + " with cost: " + String.format(java.util.Locale.US, "%.2f", cost) + "€ ********)");
+           " recharges: " + kwsNeeded + "kwh at " + charger.getClass().getSimpleName() + ": " + 
+           charger.getId() + " with cost: " + String.format(java.util.Locale.US, "%.2f", cost) + "€ ********)");
             calculateRoute();
+            // --- NUEVO: Notificar a la empresa si corresponde ---
+            if (this.notifiesCompany()) {
+                this.company.notifyCharge(charger, this);
+            }
         }
     } 
 
@@ -243,5 +247,8 @@ public abstract class ElectricVehicle
     @Override
     public int hashCode() {
         return Objects.hash(plate);
+    }
+    protected boolean notifiesCompany() {
+        return true; // Por defecto (Standard, Premium y VTC) SÍ notifican
     }
 }

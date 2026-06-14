@@ -142,6 +142,7 @@ public class EVDemo
         System.out.println("(-------------------)");
         System.out.println("( Final information )");        
         System.out.println("(-------------------)");
+        System.out.println("(-------------------)");
         System.out.println("( Electric Vehicles )");
         System.out.println("(-------------------)");
         
@@ -157,6 +158,7 @@ public class EVDemo
         for (ChargingStation station : stations) {
             System.out.println(station.getCompleteInfo());
         }
+        EVCompany.getInstance().printCompanyInfo();
     }
 
     // EL ARRANQUE GLOBAL
