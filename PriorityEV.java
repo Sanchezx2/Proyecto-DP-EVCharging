@@ -48,4 +48,29 @@ public class PriorityEV extends ElectricVehicle {
             this.incrementIdleCount();
         }
     }
+    @Override
+    public void calculateRechargingPosition() {
+        ChargingStation bestStation = null;
+        int minDistanceToTarget = Integer.MAX_VALUE;
+        
+        for (ChargingStation station : company.getCityStations()) {
+            if (station.getLocation().equals(this.location)) continue;
+            
+            int distToStation = this.location.distance(station.getLocation());
+            if (this.enoughBattery(distToStation)) {
+                if (station.hasCompatibleCharger(this)) {
+                    int distStationToTarget = station.getLocation().distance(this.targetLocation);
+                    if (distStationToTarget < minDistanceToTarget) {
+                        minDistanceToTarget = distStationToTarget;
+                        bestStation = station;
+                    }
+                }
+            }
+        }
+        this.rechargingLocation = (bestStation != null) ? bestStation.getLocation() : null;
+    }
+    @Override
+    protected boolean notifiesCompany() {
+        return false;
+    }
 }

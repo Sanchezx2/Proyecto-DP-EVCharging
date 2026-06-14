@@ -76,18 +76,49 @@ public class ChargingStation implements Iterable<Charger>
      * @param v The vehicle requesting a charger.
      * @return A compatible and free {@link Charger}, or null if none is available.
      */
+    /**
+     * Finds the CHEAPEST available charger for a specific vehicle.
+     * It iterates through the list, filters by FREE and COMPATIBLE, 
+     * and returns the one with the lowest cost.
+     * @param v The vehicle requesting a charger.
+     * @return The cheapest compatible and free {@link Charger}, or null if none is available.
+     */
     public Charger getFreeCharger(ElectricVehicle v)
     {
-        // Cambiado a recorrido normal (ascendente de 0 a size)
-        for (int i = 0; i < this.chargers.size(); i++) {
-            Charger c = this.chargers.get(i);
-            if (c.isFree() && c.checkCompatibility(v)) {
-                return c;
+        // 1. LÓGICA EXCLUSIVA PARA VTC (Busca el más barato)
+        if (v instanceof VtcEV) {
+            Charger cheapestCharger = null;
+            float minCost = Float.MAX_VALUE; 
+            
+            for (Charger c : this.chargers) {
+                // Comprobamos si está libre y es compatible (Standard o Solar)
+                if (c.isFree() && c.checkCompatibility(v)) {
+                    float currentCost = c.getChargingFee(); 
+                    
+                    // Si es estrictamente más barato, lo guardamos.
+                    // Al usar "<" y no "<=", respetamos automáticamente la regla de desempate
+                    // del proyecto: si valen lo mismo, nos quedamos con el primero que vimos.
+                    if (currentCost < minCost) {
+                        minCost = currentCost;
+                        cheapestCharger = c;
+                    }
+                }
             }
+            return cheapestCharger;
+        } 
+        
+        // 2. LÓGICA PARA STANDARD, PREMIUM Y PRIORITY (Buscan el primero)
+        else {
+            for (Charger c : this.chargers) {
+                // Como la lista ya está ordenada por velocidad (criterio principal), 
+                // el primer cargador libre y compatible que encontremos es el correcto.
+                if (c.isFree() && c.checkCompatibility(v)) {
+                    return c;
+                }
+            }
+            return null; // Si termina el bucle y no hay ninguno, devuelve null
         }
-        return null;
     }
-
     /**
      * Checks if the station has at least one charger compatible with the vehicle,
      * regardless of whether it is currently free or busy.
@@ -97,7 +128,6 @@ public class ChargingStation implements Iterable<Charger>
      */
     public boolean hasCompatibleCharger(ElectricVehicle v)
     {
-        // Cambiado a recorrido normal (de 0 a size) para mantener la coherencia absoluta
         for (int i = 0; i < this.chargers.size(); i++) {
             Charger c = this.chargers.get(i);
             if (c.checkCompatibility(v)) {

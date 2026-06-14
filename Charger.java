@@ -111,7 +111,7 @@ public abstract class Charger
                this.chargingSpeed + "kwh, " +
                this.chargingFee + "€, " +
                this.getNumerEVRecharged() + ", " +
-               this.amountCollected + "€)";
+               String.format(java.util.Locale.US, "%.2f€", this.amountCollected) + ")";
     }
 
     // --- GETTERS Y SETTERS ---

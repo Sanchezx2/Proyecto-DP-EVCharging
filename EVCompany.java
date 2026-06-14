@@ -22,6 +22,8 @@ public class EVCompany
     
     /** Lista de todas las estaciones de carga gestionadas */
     private List<ChargingStation> stations;
+    /** Para registrar todo para el companyInfo */
+    private Map<Charger, Set<ElectricVehicle>> chargeRegistry;
     
     /**
      * Constructor for objects of class EVCompany.
@@ -33,6 +35,12 @@ public class EVCompany
         // Inicializamos las listas como vacías
         this.subscribedVehicles = new ArrayList<>();
         this.stations = new ArrayList<>();
+        this.chargeRegistry = new TreeMap<>(new Comparator<Charger>() {
+    @Override
+    public int compare(Charger c1, Charger c2) {
+        return c1.getId().compareTo(c2.getId());
+    }
+});
     }
     /** Método estático global para obtener la instancia única */
     public static EVCompany getInstance() {
@@ -130,6 +138,29 @@ public class EVCompany
     public int getNumberOfStations(){
         return this.stations.size();
     }
+    public void notifyCharge(Charger charger, ElectricVehicle vehicle) {
+        // Si el cargador no está en el registro, lo añadimos con una lista vacía
+        this.chargeRegistry.putIfAbsent(charger, new LinkedHashSet<>());
+        // Añadimos el vehículo (LinkedHashSet ignora automáticamente los duplicados)
+        this.chargeRegistry.get(charger).add(vehicle);
+    }
+    public void printCompanyInfo() {
+        System.out.println("(--------------)");
+        System.out.println("( Company Info )");
+        System.out.println("(--------------)");
+        System.out.println("(EVCompany: " + this.name + ")");
+        
+        for (Map.Entry<Charger, Set<ElectricVehicle>> entry : this.chargeRegistry.entrySet()) {
+            Charger c = entry.getKey();
+            // Imprime la info básica del cargador (asegúrate de que tu c.toString() devuelve la línea correcta)
+            System.out.println(c.toString()); 
+            
+            // Imprime los vehículos que notificaron en ese cargador
+            for (ElectricVehicle v : entry.getValue()) {
+                System.out.println(v.getInitialFinalInfo());
+            }
+        }
+    }
     
     /**
      * Clears all managed vehicles and stations, resetting the company to an empty state.
@@ -137,6 +168,7 @@ public class EVCompany
     public void reset(){
         this.subscribedVehicles.clear();
         this.stations.clear();
+        this.chargeRegistry.clear();
     }
     
 }
