@@ -35,6 +35,7 @@ public class EVCompany
         // Inicializamos las listas como vacías
         this.subscribedVehicles = new ArrayList<>();
         this.stations = new ArrayList<>();
+
         this.chargeRegistry = new TreeMap<>(Comparator.comparing(Charger::getId));
     
     }
